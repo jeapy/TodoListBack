@@ -43,9 +43,19 @@ public class TodoService {
 
         existingTodo.setTitle(todoDetails.getTitle());
         existingTodo.setDescription(todoDetails.getDescription());
-        existingTodo.setCompleted(todoDetails.isCompleted());
 
         return todoRepository.save(existingTodo);
+    }
+
+    public Todo completed(Long id) {
+        Todo existingTodo = todoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
+
+        existingTodo.setCompleted(true);
+        existingTodo.setUpdatedAt(LocalDateTime.now());
+        todoRepository.flush();
+
+        return existingTodo ;
     }
 
     // Delete a todo

@@ -4,7 +4,8 @@ package jpz.application.todo.Controller;
 import jakarta.validation.Valid;
 import jpz.application.todo.Model.Todo;
 import jpz.application.todo.Service.TodoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/todos")
+@AllArgsConstructor
 public class TodoController {
     private final TodoService todoService;
-
-    @Autowired
-    public TodoController(TodoService todoService) {
-        this.todoService = todoService;
-    }
 
     // Create a new todo
     @PostMapping
@@ -47,6 +44,13 @@ public class TodoController {
     @PutMapping("/{id}")
     public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @Valid @RequestBody Todo todoDetails) {
         Todo updatedTodo = todoService.updateTodo(id, todoDetails);
+        return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
+    }
+
+    // Update a todo
+    @PutMapping("/{id}/completed")
+    public ResponseEntity<Todo> completedTodo(@PathVariable Long id) {
+        Todo updatedTodo = todoService.completed(id);
         return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
     }
 
